@@ -31,6 +31,7 @@ library(knitr)
 library(here)
 library(caTools)
 library(magrittr)
+library(janitor)
 
 here::i_am("wine_report.Rmd")  # Set up path
 
@@ -75,7 +76,7 @@ skim(wine)
 
 To begin our investigation of the most informative attributes in predicting the target attribute, quality, we begin by looking at the correlation between our attributes and quality. We look at those attributes with correlation (positive or negative) with quality greater than an arbitrarily chosen threshold, 0.10. 
 
-That filters our the least informative attributes: residual_sugar, free_sulfur_dioxide, pH. These three attributes have almost no correlation with quality, which may be attributed to their small varience or small inter-quantile range. \*\*\*\*\*
+That filters our the least informative attributes: residual_sugar, free_sulfur_dioxide, pH. These three attributes have almost no correlation with quality, which may be attributed to their relativly small varience or small inter-quantile range. 
 
 ```{r}
 # Create correlation matrix
@@ -91,8 +92,8 @@ corr_quality[abs(corr_quality) >= threshold & corr_quality < 1]
 ```
 
 
-
 We exluded some attributes that have a low correlation with quality. We would like to further destil our attributes list to even fewer attributes. In addition to our assumption that strong correlation with the target attribute implies high predictive power, we must consider the case of two attributes which are strongly correlated with quality, but contain the same information, rendering one of them redundant. To search for those attributes with redundant information. Such redundant attributes are those strongly correlated with each other. To find those attributes, we utilize a correlation matrix.
+
 
 ```{r}
 wine %>%
@@ -135,6 +136,9 @@ We split the data to training and test sets and train the four aforementioned mo
 split1<- sample(c(rep(0, 0.7 * nrow(wine)), rep(1, 0.3 * nrow(wine))))
 split1 <- append(split1, 0, length(split1)) # add missing value
 
+split1 %>%
+  tabyl()
+
 train <- wine[split1 == 0,]
 test <- wine[split1 == 1,]
 
@@ -155,8 +159,6 @@ train_reduced <- select(train, c(volatile_acidity, chlorides, total_sulfur_dioxi
 
 model4 <- lm(quality ~ ., data = train_reduced)
 ```
-
-Next, we run the models on our test set, producing our predicted quality based on the selected attributes
 
 
 We assess the accuracy of our models using the loss function, Mean Squared Error
@@ -189,10 +191,6 @@ MSE4 <- model4$residuals %>%
   print()
 
 
-MSE1
-MSE2
-MSE3
-MSE4
 
 MSEs = c(MSE1, MSE2, MSE3, MSE4)
 MSEs_names = c("Model-1", "Model-2", "Model-3", "Model-4")
@@ -207,6 +205,16 @@ errors %>%
 ```
 
 # Conclusion
+
+Eventhough our models utilized 11, 8, 7, or 6 attributes, the accuracy of our the 4 models is stagerengly similar, demonstrating that most the predictive information contained within the removed attributes were redundant. Hence, the results of our experiement validate our hypothises.
+
+
+
+
+
+
+
+
 
 
 

@@ -3,6 +3,7 @@ library(tidyr)
 library(readr)
 library(skimr)
 library(corrplot)
+library(janitor)
 wine <- read_csv("./data/winequality-red-clean.csv")
 head(wine)
 
@@ -127,10 +128,13 @@ corr_negative <- corr_array[corr_array < -0.5]
 
 
 
+as.data.frame(scale(wine))
 
-
-
-
+wine %>% 
+  select(residual_sugar, free_sulfur_dioxide, pH) %>% 
+  scale() %>% 
+  as.data.frame() %>% 
+  print()
 
 
 # Identifying the strongest positive correlations :
