@@ -4,6 +4,11 @@ library(readr)
 library(skimr)
 library(corrplot)
 library(janitor)
+library(reactable)
+
+
+
+
 wine <- read_csv("./data/winequality-red-clean.csv")
 head(wine)
 

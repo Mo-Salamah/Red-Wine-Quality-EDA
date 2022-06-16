@@ -32,6 +32,7 @@ library(here)
 library(caTools)
 library(magrittr)
 library(janitor)
+library(reactable)
 
 here::i_am("wine_report.Rmd")  # Set up path
 
@@ -40,43 +41,62 @@ wine <- read_csv("./../data/winequality-red-clean.csv")
 
 # Synopsis
 
-Data collection is costly and in quality-assurance efforts by wine manufacturers, it is paramount to collect only the attributes with the most predictive power while ignoring irrelevant and redundant attributes to achieve high cost-effectiveness. Thus we have invistigated the wine dataset to assess whether we can predict wine quality without using all attributes without losing significant predictive information. If we are able to find some attributes that are not informative, we will recommend to wine quality-assurance experts to cease monetoring the uninformative attributes. We hypothisize that many attributes can be dispensed with. 
+Data collection is costly and in quality-assurance efforts by wine manufacturers, it is paramount to collect only the attributes with the most predictive power while ignoring irrelevant and redundant attributes to achieve high cost-effectiveness. Thus we have invistigated the wine dataset to assess whether we can predict wine quality without using all attributes without losing significant predictive information. If we are able to find some attributes that are not informative, we will recommend to wine quality-assurance experts to cease monetoring the uninformative attributes. We hypothisize that many attributes can be dispensed with.
 
 To validate our hypothises, we tested many linear regression models exluding the less informative attributes and compared them with models that incorportate all attributes. We have found a greate deal of congruency between our hypothises and the results of our expirements.
 
 # Data
 
 | Attribute            | Description                                                                                                             |
-|-------------------|-----------------------------------------------------|
-| fixed_acidity        | Most acids involved with wine or fixed or nonvolatile (do not evaporate readily).                                       |
-| volatile_acidity     | The amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste.                |
-| citric_acid          | Found in small quantities, citric acid can add 'freshness' and flavor to wines.                                         |
-| residual_sugar       | The amount of sugar remaining after fermentation stops.                                                                 |
-| chlorides            | The amount of salt in the wine.                                                                                         |
-| free_sulfur_dioxide  | The free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion.                |
-| total_sulfur_dioxide | Amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine.                       |
-| density              | The density of water is close to that of water depending on the percent alcohol and sugar content.                      |
+|--------------------|----------------------------------------------------|
+| Fixed Acidity        | Most acids involved with wine or fixed or nonvolatile (do not evaporate readily).                                       |
+| Volatile Acidity     | The amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste.                |
+| Citric Acid          | Found in small quantities, citric acid can add 'freshness' and flavor to wines.                                         |
+| Residual Sugar       | The amount of sugar remaining after fermentation stops.                                                                 |
+| Chlorides            | The amount of salt in the wine.                                                                                         |
+| Free Sulfur Dioxide  | The free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion.                |
+| Total Sulfur Dioxide | Amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine.                       |
+| Density              | The density of water is close to that of water depending on the percent alcohol and sugar content.                      |
 | pH                   | Describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4. |
-| sulphates            | A wine additive which can contribute to sulfur dioxide gas (S02) levels.                                                |
-| alcohol              | Alcohol percentage; most wines are between %9-%15.                                                                      |
-| quality              | The quality of the wine taste based on evaluaters judgment; most wines have rating between 3-8.                         |
-
-
+| Sulphates            | A wine additive which can contribute to sulfur dioxide gas (S02) levels.                                                |
+| Alcohol              | Alcohol percentage; most wines are between %9-%15.                                                                      |
+| Quality              | The quality of the wine taste based on evaluaters judgment; most wines have rating between 3-8.                         |
 
 Let's take a look at our data:
 
+```{r}
 
+reactable(
+  wine[1:8, ],
+  columns = list(
+    fixed_acidity = colDef(name = "Fixed Acidity"),
+    volatile_acidity = colDef(name = "Volatile Acidity"),
+    citric_acid = colDef(name = "Citric Acid"),
+    residual_sugar = colDef(name = "Residual Sugar"),
+    chlorides = colDef(name = "Chlorides"),
+    free_sulfur_dioxide = colDef(name = "Free Sulfur Dioxide"),
+    total_sulfur_dioxide = colDef(name = "Total Sulfur Dioxide"),
+    density = colDef(name = "Density"),
+    pH = colDef(name = "pH"),
+    sulphates = colDef(name = "Sulphates"),
+    alcohol = colDef(name = "Alcohol"),
+    quality = colDef(name = "Quality")))
+
+
+
+
+
+```
 
 ```{r}
 skim(wine)
 ```
 
-
 # EDA
 
-To begin our investigation of the most informative attributes in predicting the target attribute, quality, we begin by looking at the correlation between our attributes and quality. We look at those attributes with correlation (positive or negative) with quality greater than an arbitrarily chosen threshold, 0.10. 
+To begin our investigation of the most informative attributes in predicting the target attribute, quality, we begin by looking at the correlation between our attributes and quality. We look at those attributes with correlation (positive or negative) with quality greater than an arbitrarily chosen threshold, 0.10.
 
-That filters our the least informative attributes: residual_sugar, free_sulfur_dioxide, pH. These three attributes have almost no correlation with quality, which may be attributed to their relativly small varience or small inter-quantile range. 
+That filters our the least informative attributes: residual_sugar, free_sulfur_dioxide, pH. These three attributes have almost no correlation with quality, which may be attributed to their relativly small varience or small inter-quantile range.
 
 ```{r}
 # Create correlation matrix
@@ -91,9 +111,7 @@ corr_quality <-  corr_matrix[12, 1:ncol(corr_matrix)]
 corr_quality[abs(corr_quality) >= threshold & corr_quality < 1]
 ```
 
-
 We exluded some attributes that have a low correlation with quality. We would like to further destil our attributes list to even fewer attributes. In addition to our assumption that strong correlation with the target attribute implies high predictive power, we must consider the case of two attributes which are strongly correlated with quality, but contain the same information, rendering one of them redundant. To search for those attributes with redundant information. Such redundant attributes are those strongly correlated with each other. To find those attributes, we utilize a correlation matrix.
-
 
 ```{r}
 wine %>%
@@ -105,7 +123,6 @@ corr_matrix_reduced %>%
 ```
 
 Through visual inspection of the correlation matrix, fixed_acidity stands out as a potentially redundant attribute. The reasoning behind this intution, is that fixed_acidity has a strong positive correlation with both citric_acid and density (0.67 and 0.66, respectively), so it stands to reason that much of the insight into wine quality one can gain through fixed_acidity, one can also gain through looking at citric_acid and density. The two attributes, citric_acid and density are not redundant as the two are weakly correlated (0.36). Hence, we exclude fixed_acidity.
-
 
 We create another correlation matrix
 
@@ -126,7 +143,6 @@ Similar to the previous paragraph, we visually inspect the reduced correlation m
 #Methodology and Prediction
 
 Our hypothises as described previously is that most of the predictive information in our data set lies within only few of the eleven attributes. To validate this hypothises we propose to train four linear regression models on our data set, once utilizing all attributes, once excluding residual_sugar, free_sulfur_dioxide, pH (due to their weak correlation with quality), once excluding the previous three attributes and the redundant fixed_acidity, and finally, once excluding the previous four attributes and the redundant citric_acid. We expect our model to have comporable accuracy accross the four models.
-
 
 We split the data to training and test sets and train the four aforementioned models.
 
@@ -160,12 +176,11 @@ train_reduced <- select(train, c(volatile_acidity, chlorides, total_sulfur_dioxi
 model4 <- lm(quality ~ ., data = train_reduced)
 ```
 
-
 We assess the accuracy of our models using the loss function, Mean Squared Error
 
-$ frac {\\sum\_{i=1}\^{D}(x_i-y_i)\^2} {n} $
+\$ frac {\\sum\_{i=1}\^{D}(x_i-y_i)\^2} {n} \$
 
-Where y^ is predicted ...********
+Where y\^ is predicted ...\*\*\*\*\*\*\*\*
 
 ```{r}
 
@@ -207,27 +222,3 @@ errors %>%
 # Conclusion
 
 Eventhough our models utilized 11, 8, 7, or 6 attributes, the accuracy of our the 4 models is stagerengly similar, demonstrating that most the predictive information contained within the removed attributes were redundant. Hence, the results of our experiement validate our hypothises.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
