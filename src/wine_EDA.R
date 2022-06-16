@@ -55,24 +55,21 @@ wine %>%
            
 # Simple individual plots -----------------
 
-ggplot(wine, aes(fixed_acidity, quality)) +
-  geom_boxplot()
-
-
-wine %>% 
-  select(fixed_acidity, quality) %>% 
-  group_by(quality) %>% 
-  summarise(avg = mean(fixed_acidity)) -> wine_f_acidity
-
-wine %>% 
-  select(volatile_acidity, quality) %>% 
-  group_by(quality) %>% 
-  summarise(avg = mean(volatile_acidity)) -> wine_v_acidity
-
-wine %>% 
-  select(citric_acid, quality) %>% 
-  group_by(quality) %>% 
-  summarise(avg = mean(citric_acid)) -> wine_c_acid
+# 
+# wine %>% 
+#   select(fixed_acidity, quality) %>% 
+#   group_by(quality) %>% 
+#   summarise(avg = mean(fixed_acidity)) -> wine_f_acidity
+# 
+# wine %>% 
+#   select(volatile_acidity, quality) %>% 
+#   group_by(quality) %>% 
+#   summarise(avg = mean(volatile_acidity)) -> wine_v_acidity
+# 
+# wine %>% 
+#   select(citric_acid, quality) %>% 
+#   group_by(quality) %>% 
+#   summarise(avg = mean(citric_acid)) -> wine_c_acid
 
 
 # Plot idea: combine these three plots into one 
@@ -83,21 +80,30 @@ wine %>%
 #  - group is an additional column that denotes to which of (fixed_acidity, 
 #    volatile_acidity, citric_acid) the avg value belongs
 
-p_f_acidity <- ggplot(wine_f_acidity, aes(y = avg, x = quality, group = quality)) 
-p_v_acidity <- ggplot(wine_v_acidity, aes(y = avg, x = quality, group = quality)) 
-p_f_acidity <- ggplot(wine_c_acid, aes(y = avg, x = quality, group = quality)) 
+p_f_acidity <- ggplot(wine, aes(y = fixed_acidity, x = quality, group = quality)) 
+p_v_acidity <- ggplot(wine, aes(y = volatile_acidity, x = quality, group = quality)) 
+p_citric_acid <- ggplot(wine, aes(y = citric_acid, x = quality, group = quality)) 
+p_alcohol <- ggplot(wine, aes(y = alcohol, x = quality, group = quality)) 
 
+# What we learn from the below graph is that fixed_acidity is 
+# Not informative
 p_f_acidity +     
-  geom_point()
-  
+  geom_boxplot()
+
+# What we learn from the below plot is that volatile_acidity
+# is negatively correlated with quality and that the relationship
+# is well described by a linear function 
 p_v_acidity +
-  geom_point()
+  geom_boxplot()
 
-p_f_acidity +
-  geom_point()
+p_v_acidity +
+  geom_point(alpha = 0.1)
 
-p_fix_vol_acidity <- ggplot(wine_f_acidity, aes(y = avg, x = quality, group = quality)) 
+p_citric_acid +
+  geom_boxplot()
 
+p_alcohol +
+  geom_boxplot()
 
 
 skim(wine)
@@ -118,6 +124,14 @@ corr_positive <- corr_array[corr_array > 0.5 & corr_array < 1]
 
 # Find the strongest negative correlations between attributes
 corr_negative <- corr_array[corr_array < -0.5]
+
+
+
+
+
+
+
+
 
 # Identifying the strongest positive correlations :
 # - fixed_acidity x citric_acid
