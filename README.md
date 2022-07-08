@@ -1,1 +1,44 @@
-The repository contains all that belongs to the analysis of the [wine data set](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009). In data, you can find the dataset, inclduing one with an updated header. In archive, you can find the assignment description I followed to produce this report. In src, you can find wine_EDA.R an R script that contains the analysis I conducted. Additionally, you will find wine_report.Rmd, which is an R Markdown file which renders the HTML report, wine_report.html. For best viewing experience of the report, please visit the report at [github.io pages](https://misk-dsi.github.io/individual-assignment-2-Mo-Salamah/).
+# Red Wine Quality EDA
+
+This assignment was completed as the first Exploratory Data Analysis project in Misk's Data Science Intensive program.
+
+[Link: Click here to view the report](https://misk-dsi.github.io/individual-assignment-2-Mo-Salamah/)
+
+## Introduction
+
+Red wine is popular in many regions around the world and that popularity led its physiochemical markers to be collected for analysis of the characteristics and their relationships with its quality- as well as each other. 
+
+**Objective**
+
+ - Learn more about R and Rmarkdown.
+ - Practice EDA and data munging.
+
+ **Table of Contents**
+ - Introduction
+ - Data
+ - EDA
+ - Conclusion
+ - References
+ - Source Code
+
+## Dataset
+
+[Link: Red Wine Quality](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009). Instances were described using 12 different features.
+
+Feature| 
+---|
+Fixed acidity | 
+Volatile acidity |
+Citric acid |
+Residual sugar | 
+Chlorides |
+Free sulfur dioxide |
+Total sulfur dioxide |
+Density |
+PH |
+Sulphates |
+Alcohol |
+Quality|
+
+
+
