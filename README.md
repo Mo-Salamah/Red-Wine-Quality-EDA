@@ -2,7 +2,7 @@
 
 This assignment was completed as the first project in Misk's Data Science Intensive program.
 
-[Link: Click here to view the report](https://mo-salamah.github.io/Red-Wine-Quality-EDA/)
+[:link: Click here to view the report](https://mo-salamah.github.io/Red-Wine-Quality-EDA/)
 
 ## Introduction
 
