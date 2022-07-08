@@ -1,6 +1,7 @@
 ---
 title: "wine_report.Rmd"
 output: html_document
+author: 'Mohammed Alsalamah'
 date: '2022-06-14'
 knit: (function(input, ...) {
     rmarkdown::render(
@@ -14,13 +15,9 @@ knit: (function(input, ...) {
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, results = FALSE, message=FALSE, warning=FALSE}
 
 library(tidyverse)
 library(tidyr)
@@ -64,7 +61,7 @@ To validate our hypothises, we tested many linear regression models exluding the
 
 Let's take a look at our data:
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 reactable(
   wine[1:8, ],
@@ -147,7 +144,6 @@ Our hypothises as described previously is that most of the predictive informatio
 We split the data to training and test sets and train the four aforementioned models.
 
 ```{r}
-# Please excuse the exsessive use of copy and paste
 
 split1<- sample(c(rep(0, 0.7 * nrow(wine)), rep(1, 0.3 * nrow(wine))))
 split1 <- append(split1, 0, length(split1)) # add missing value
@@ -176,11 +172,8 @@ train_reduced <- select(train, c(volatile_acidity, chlorides, total_sulfur_dioxi
 model4 <- lm(quality ~ ., data = train_reduced)
 ```
 
-We assess the accuracy of our models using the loss function, Mean Squared Error
+We assess the accuracy of our models using the loss function, Mean Squared Error.
 
-\$ frac {\\sum\_{i=1}\^{D}(x_i-y_i)\^2} {n} \$
-
-Where y\^ is predicted ...\*\*\*\*\*\*\*\*
 
 ```{r}
 
@@ -221,4 +214,6 @@ errors %>%
 
 # Conclusion
 
-Eventhough our models utilized 11, 8, 7, or 6 attributes, the accuracy of our the 4 models is stagerengly similar, demonstrating that most the predictive information contained within the removed attributes were redundant. Hence, the results of our experiement validate our hypothises.
+Even though our models utilized 11, 8, 7, or 6 attributes, the accuracy of our the 4 models is staggeringly similar, demonstrating that most the predictive information contained within the removed attributes were redundant. Hence, the results of our experiment validate our hypothesis.
+
+
