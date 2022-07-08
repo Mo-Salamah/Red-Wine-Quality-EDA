@@ -105,13 +105,13 @@ corr_matrix_reduced_2 %>%
 
 ```
 
-Similar to the previous paragraph, we visually inspect the reduced correlation matrix above, and notice that citric_acid is moderetly positively correlated with all other attributes, so we condlude that it is redundant. Hence, we exclude citric_acid. This leaves us with six attributes: volatile_acidity, chlorides, total_sulfur_dioxide, density, sulphates, and alcohol as our remaining attributes.
+Similar to the previous paragraph, we visually inspect the reduced correlation matrix above, and notice that citric_acid is moderately positively correlated with all other attributes, so we conclude that it is redundant. Hence, we exclude citric_acid. This leaves us with six attributes: volatile_acidity, chlorides, total_sulfur_dioxide, density, sulfates, and alcohol as our remaining attributes.
 
 # Experiment
 
 #Methodology and Prediction
 
-Our hypothises as described previously is that most of the predictive information in our data set lies within only few of the eleven attributes. To validate this hypothises we propose to train four linear regression models on our data set, once utilizing all attributes, once excluding residual_sugar, free_sulfur_dioxide, pH (due to their weak correlation with quality), once excluding the previous three attributes and the redundant fixed_acidity, and finally, once excluding the previous four attributes and the redundant citric_acid. We expect our model to have comporable accuracy accross the four models.
+Our hypothises as described previously is that most of the predictive information in our data set lies within only few of the eleven attributes. To validate this hypothesis we propose to train four linear regression models on our data set, once utilizing all attributes, once excluding residual_sugar, free_sulfur_dioxide, pH (due to their weak correlation with quality), once excluding the previous three attributes and the redundant fixed_acidity, and finally, once excluding the previous four attributes and the redundant citric_acid. We expect our model to have comparable accuracy across the four models.
 
 We split the data to training and test sets and train the four aforementioned models.
 
@@ -192,3 +192,6 @@ errors %>%
 ```
 
 # Conclusion
+
+We have found that our hypothises is valid- we only need a small subset (6/11 attributes) of the physio-chemical attributes to be able to produce reliable predictions on the quality of red wine. 
+
