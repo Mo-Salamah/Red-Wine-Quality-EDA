@@ -2,8 +2,8 @@
 
 This assignment was completed as the first Exploratory Data Analysis project in Misk's Data Science Intensive program.
 
-[Link: Click here to view the report](https://mo-salamah.github.io/Red-Wie-Quality-EDA/wine_report.html)
-[Link: Click here to view the report](https://mo-salamah.github.io/Red-Wie-Quality-EDA/index.html)
+[Link: Click here to view the report](https://mo-salamah.github.io/Red-Wine-Quality-EDA/)
+
 
 ## Introduction
 
